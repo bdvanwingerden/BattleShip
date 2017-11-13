@@ -17,6 +17,6 @@ public class PrintStreamMessageListener implements MessageListener {
     }
 
     public void sourceClosed(MessageSource source){
-        
+
     }
 }
