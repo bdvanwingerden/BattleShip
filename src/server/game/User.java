@@ -3,6 +3,7 @@ package server.game;
 public class User {
     Grid grid;
     String username;
+    int numHits;
 
     public User(String username) {
         this.username = username;
