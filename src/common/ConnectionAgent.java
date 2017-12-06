@@ -1,7 +1,5 @@
 package common;
 
-import common.MessageSource;
-
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
@@ -12,12 +10,15 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     private PrintStream out;
     private Thread thread;
 
-    public ConnectionAgent(Socket socket){
-
+    public ConnectionAgent(Socket socket, Scanner in, PrintStream out, Thread
+            thread){
+        this.socket = socket;
+        this.in = in;
+        this.out = out;
+        this.thread = thread;
     }
 
     public void sendMessage(String message){
-
     }
 
     public boolean isConnected(){

@@ -1,6 +1,7 @@
 package server.game;
 
-public class User {
+
+public class User{
     Grid grid;
     String username;
 
