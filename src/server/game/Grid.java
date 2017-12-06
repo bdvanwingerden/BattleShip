@@ -46,52 +46,7 @@ public class Grid {
 
         if(length <= DIMENSIONS){
             if(grid[x][y].equals(" ")){
-                //HORIZONTAL
-                if(direction == 0){
-                    boolean noShips = true;
-
-                    for(int i = x; i < x+length; i++){
-
-                        if(i >= DIMENSIONS) {
-                            addShip(symbol, length);
-                            return;
-                        }else if(!grid[i][y].equals(" ")){
-                            noShips = false;
-                        }
-                    }
-
-                    if(noShips){
-                        System.out.println(symbol + " added");
-                        for(int i = x; i < x+length; i++){
-                            grid[i][y] = symbol;
-                        }
-                    }else{
-                        addShip(symbol,length);
-                        return;
-                    }
-                }
-                //VERTICAL
-                else if(direction ==1){
-                    boolean noShips = true;
-
-                    for(int i = y; i < y+length; i++){
-                        if(i >= DIMENSIONS) {
-                            addShip(symbol, length);
-                            return;
-                        }else if(!grid[x][i].equals(" ")){
-                            noShips = false;
-                        }
-                    }
-
-                    if(noShips){
-                        System.out.println(symbol + " added");
-                        for(int i = y; i < y+length; i++){
-                            grid[x][i] = symbol;
-                        }
-                    }else{
-                        addShip(symbol,length);
-                    }
-                }
+                attemptToDrawShip(x,y,symbol,length,direction);
             }else{
                 addShip(symbol, length);
             }
@@ -152,8 +107,49 @@ public class Grid {
         }
     }
 
+
     /**
-     * main method to test adding ships, taking shots, and printing the board correctly 
+     *
+     * @param x
+     * @param y
+     * @param symbol
+     * @param length
+     * @param orientation 0 if horizontal and 1 if vertical
+     */
+    public void attemptToDrawShip( int x, int y, String symbol,
+                                          int length, int orientation){
+        boolean noShips = true;
+
+        for(int i = y; i < y+length; i++){
+
+            if(i >= DIMENSIONS) {
+                addShip(symbol, length);
+                return;
+            }else if(!grid[x][i].equals(" ") && orientation == 1 || !grid[i][y]
+                    .equals(" ")
+                    &&
+                    orientation == 0){
+                noShips = false;
+            }
+        }
+
+        if(noShips){
+            System.out.println(symbol + " added");
+            for(int i = y; i < y+length; i++){
+                if(orientation == 1){
+                    grid[x][i] = symbol;
+                }else if(orientation == 0){
+                    grid[i][y] = symbol;
+                }
+
+            }
+        }else{
+            addShip(symbol,length);
+        }
+    }
+
+    /**
+     * main method to test adding ships, taking shots, and printing the board correctly
      * @param args
      */
     public static void main(String args[]){
