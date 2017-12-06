@@ -25,6 +25,8 @@ public class Grid {
                 grid[x][y] = " ";
             }
         }
+
+        addShips();
     }
 
     /**
@@ -148,17 +150,21 @@ public class Grid {
         }
     }
 
+    public void addShips(){
+        addShip("A", 5);
+        addShip("B", 4);
+        addShip("S", 3);
+        addShip("D", 3);
+        addShip("P", 2);
+    }
+
     /**
      * main method to test adding ships, taking shots, and printing the board correctly
      * @param args
      */
     public static void main(String args[]){
         Grid grid = new Grid();
-        grid.addShip("A", 5);
-        grid.addShip("B", 4);
-        grid.addShip("S", 3);
-        grid.addShip("D", 3);
-        grid.addShip("P", 2);
+
         grid.takeShot(4,4);
         grid.takeShot(5,5);
         grid.takeShot(6,6);
