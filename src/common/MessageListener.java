@@ -12,12 +12,12 @@ public interface MessageListener {
      * @param message The message received by the subject
      * @param source The source from which this message originated (if needed).
      */
-    public void messageReceived(String message, MessageSource source);
+    void messageReceived(String message, MessageSource source);
     /**
      * Used to notify observers that the subject will not receive new messages; observers can
      * deregister themselves.
      *
      * @param source The <code>MessageSource</code> that does not expect more messages.
      */
-    public void sourceClosed(MessageSource source);
+    void sourceClosed(MessageSource source);
 }

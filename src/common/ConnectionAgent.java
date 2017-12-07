@@ -11,14 +11,17 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     private PrintStream out;
     private Thread thread;
 
-    public ConnectionAgent(Socket socket, Scanner in, PrintStream out){
+    public ConnectionAgent(Socket socket, Scanner in, PrintStream out,
+                           MessageListener messageListener){
         this.socket = socket;
         this.in = in;
         this.out = out;
         this.thread = null;
+        addMessageListener(messageListener);
     }
 
     public void sendMessage(String message){
+        notifyReceipt(message);
         out.println(message);
     }
 
@@ -29,6 +32,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     public void close(){
         try {
             socket.close();
+            closeMessageSource();
         }catch (IOException e){
             //Do nothing because if we can't close the socket then it is
             // probably already closed

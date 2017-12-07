@@ -1,5 +1,6 @@
 package client;
 
+import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 
@@ -35,7 +36,7 @@ public class BattleClient extends MessageSource implements MessageListener {
                     + host);
         }
 
-        connectA = new ConnectionAgent(clientSocket);
+        //connectA = new ConnectionAgent(clientSocket);
     }
 
     public void connect(){
@@ -44,7 +45,7 @@ public class BattleClient extends MessageSource implements MessageListener {
     }//end connect()
 
     public void messageReceived(String message, MessageSource source){
-        //will print out message received
+        System.out.println("message recieved");
     }
 
     public void sourceClosed(MessageSource source){
