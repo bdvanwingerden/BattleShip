@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class User extends ConnectionAgent{
+
     Grid grid;
     String username;
 

@@ -1,5 +1,6 @@
 package server;
 
+import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 import server.game.Game;
@@ -90,4 +91,26 @@ public class BattleServer implements MessageListener{
     public void sourceClosed(MessageSource source){
 
     }
+
+    /**
+     * Interprets the command sent from the users
+     */
+    public void gameCommand(String userCmd){
+
+
+        if(userCmd.equals("/join")){
+            //user joins server
+        }else if(userCmd.equals("/play")){
+            //user attempts to enter game
+        }else if(userCmd.equals("/attack")){
+            //User attempts to attack another player
+        }else if(userCmd.equals("/quit")){
+            //User wants to quit
+        }else if(userCmd.equals("/show")){
+            //User wants to see an opponents board
+        }
+
+    }//end gameCommand
+
+
 }

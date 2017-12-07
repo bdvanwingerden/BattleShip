@@ -4,9 +4,10 @@ import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class BattleClient extends MessageSource implements MessageListener {
 
@@ -19,35 +20,86 @@ public class BattleClient extends MessageSource implements MessageListener {
     /**User name of client*/
     private String userName;
 
+    /**Socket to connect to the server*/
     private Socket clientSocket;
 
-    ConnectionAgent connectA;
+    /**The current users corresponding connection agent*/
+    ConnectionAgent currentAgent;
 
+    /**Boolean to check if socket is still connected*/
+    private boolean isConnected;
 
+    /**Command to make request from the server*/
+    String battleCommand;
+
+    Scanner userInput;
+
+    /**
+     * Default constructor
+     *
+     * @param host - address of the BattleServer
+     * @param port - port to connect to
+     * @param userName - Name of current user
+     */
     public BattleClient(InetAddress host, int port, String userName) {
         this.host = host;
         this.port = port;
         this.userName = userName;
 
+        /**
         try {
             clientSocket = new Socket(host, port);
         }catch(IOException ioe){
             System.err.println("Couldn't get I/O for the connection to the host "
                     + host);
         }
-
-        //connectA = new ConnectionAgent(clientSocket);
+         */
     }
 
-    public void connect(){
+    /**
+     *
+     * @throws IOException
+     */
+    public void connect() throws IOException{
 
+        isConnected = true;
+
+        clientSocket = new Socket(host, port);
+
+        userInput = new Scanner(System.in);
+
+        while(isConnected){
+
+            BufferedWriter out =
+                    new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+
+            Scanner inFromServer =
+                    new Scanner(new InputStreamReader(clientSocket.getInputStream()));
+
+            PrintStream outToServer =
+                    new PrintStream(clientSocket.getOutputStream());
+
+            currentAgent = new ConnectionAgent(clientSocket, inFromServer,
+                    outToServer, this);
+
+            currentAgent.setThread(new Thread(currentAgent));
+
+            currentAgent.go();
+
+            while((battleCommand = userInput.nextLine()) != null){
+                out.write(battleCommand);
+            }
+
+        }//end while
 
     }//end connect()
 
+    @Override
     public void messageReceived(String message, MessageSource source){
         System.out.println("message recieved");
     }
 
+    @Override
     public void sourceClosed(MessageSource source){
 
     }
