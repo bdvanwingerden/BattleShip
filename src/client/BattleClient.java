@@ -1,5 +1,6 @@
 package client;
 
+import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 
@@ -35,7 +36,7 @@ public class BattleClient extends MessageSource implements MessageListener {
                     + host);
         }
 
-        connectA = new ConnectionAgent(clientSocket);
+        //connectA = new ConnectionAgent(clientSocket);
     }
 
     public void connect(){

@@ -49,9 +49,10 @@ public class BattleServer implements MessageListener{
                     inFromClient, outToClient);
 
             currentAgent.setThread(new Thread(currentAgent));
+
             connectionAgents.add(currentAgent);
             currentAgent.go();
-            
+
         }
 
         serverSocket.close();
