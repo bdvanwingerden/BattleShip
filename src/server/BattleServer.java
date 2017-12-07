@@ -33,23 +33,25 @@ public class BattleServer implements MessageListener{
     public void listen() throws IOException{
         serverSocket = new ServerSocket(port);
 
-        Socket connectionSocket = serverSocket.accept();
-
-        Scanner inFromClient =
-                new Scanner(new InputStreamReader(connectionSocket
-                        .getInputStream()));
-
-        PrintStream outToClient =
-                new PrintStream(connectionSocket.getOutputStream());
-
         boolean serverDone = false;
         //TODO make this not a forever loop
         while (!serverDone) {
             clientSocket = serverSocket.accept();
 
-            connectionAgents.add(new ConnectionAgent(clientSocket,
-                            inFromClient, outToClient, new Thread()));
+            Scanner inFromClient =
+                    new Scanner(new InputStreamReader(clientSocket
+                            .getInputStream()));
 
+            PrintStream outToClient =
+                    new PrintStream(clientSocket.getOutputStream());
+
+            ConnectionAgent currentAgent = new ConnectionAgent(clientSocket,
+                    inFromClient, outToClient);
+
+            currentAgent.setThread(new Thread(currentAgent));
+            connectionAgents.add(currentAgent);
+            currentAgent.go();
+            
         }
 
         serverSocket.close();
