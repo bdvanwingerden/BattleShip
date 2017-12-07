@@ -1,25 +1,33 @@
 package server;
 
+import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 import server.game.Game;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BattleServer implements MessageListener{
     private ServerSocket serverSocket;
+    private Socket clientSocket;
     private int current;
     private Game game;
     private int port;
+    private ArrayList<ConnectionAgent> connectionAgents;
 
     public BattleServer(int port) {
         this.game = new Game();
         current = 0;
         this.port = port;
+        connectionAgents = new ArrayList<>();
+        serverSocket = null;
+        clientSocket =  null;
     }
 
     public void listen() throws IOException{
@@ -28,15 +36,29 @@ public class BattleServer implements MessageListener{
         Socket connectionSocket = serverSocket.accept();
 
         Scanner inFromClient =
-                new Scanner(new InputStreamReader(connectionSocket.getInputStream()));
+                new Scanner(new InputStreamReader(connectionSocket
+                        .getInputStream()));
 
-        game.addUser(inFromClient.next());
+        PrintStream outToClient =
+                new PrintStream(connectionSocket.getOutputStream());
+
+        boolean serverDone = false;
+        //TODO make this not a forever loop
+        while (!serverDone) {
+            clientSocket = serverSocket.accept();
+
+            connectionAgents.add(new ConnectionAgent(clientSocket,
+                            inFromClient, outToClient, new Thread()));
+
+        }
 
         serverSocket.close();
     }
 
     public void broadcast(String message){
-
+        for(ConnectionAgent c : connectionAgents){
+            c.sendMessage(message);
+        }
     }
 
     public void messageReceived(String message, MessageSource source){
