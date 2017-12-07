@@ -45,7 +45,7 @@ public class BattleClient extends MessageSource implements MessageListener {
     }//end connect()
 
     public void messageReceived(String message, MessageSource source){
-        //will print out message received
+        System.out.println("message recieved");
     }
 
     public void sourceClosed(MessageSource source){

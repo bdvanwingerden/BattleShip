@@ -1,13 +1,26 @@
 package server.game;
 
 
-public class User{
+import common.ConnectionAgent;
+import common.MessageListener;
+
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class User extends ConnectionAgent{
     Grid grid;
     String username;
 
-    public User(String username) {
+    public User(Socket socket, Scanner in, PrintStream out, MessageListener
+            messageListener) {
+        super(socket, in, out, messageListener);
         this.username = username;
         grid = new Grid();
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 
     public Grid getGrid() {

@@ -4,6 +4,7 @@ import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 import server.game.Game;
+import server.game.User;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,14 +46,13 @@ public class BattleServer implements MessageListener{
             PrintStream outToClient =
                     new PrintStream(clientSocket.getOutputStream());
 
-            ConnectionAgent currentAgent = new ConnectionAgent(clientSocket,
-                    inFromClient, outToClient);
+            ConnectionAgent currentAgent = new User(clientSocket,
+                    inFromClient, outToClient, this);
 
             currentAgent.setThread(new Thread(currentAgent));
 
             connectionAgents.add(currentAgent);
             currentAgent.go();
-
         }
 
         serverSocket.close();
@@ -65,7 +65,7 @@ public class BattleServer implements MessageListener{
     }
 
     public void messageReceived(String message, MessageSource source){
-
+        System.out.println(source + message);
     }
 
     public void sourceClosed(MessageSource source){
