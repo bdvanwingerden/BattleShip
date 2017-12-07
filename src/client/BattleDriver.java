@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 public class BattleDriver {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     /**
      * Main method: This is the entry point for the clients
@@ -44,5 +45,7 @@ public class BattleDriver {
 }//end class BattleDriver
 =======
    
+=======
+>>>>>>> parent of 4565294... server kinda working
 }
 >>>>>>> 4565294050c054fdd8d47692d56a99ea28109078
