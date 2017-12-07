@@ -11,12 +11,11 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     private PrintStream out;
     private Thread thread;
 
-    public ConnectionAgent(Socket socket, Scanner in, PrintStream out, Thread
-            thread){
+    public ConnectionAgent(Socket socket, Scanner in, PrintStream out){
         this.socket = socket;
         this.in = in;
         this.out = out;
-        this.thread = thread;
+        thread = null;
     }
 
     public void sendMessage(String message){
@@ -36,9 +35,17 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         }
     }
 
+    public void setThread(Thread thread){
+        this.thread = thread;
+    }
+
+    public void go(){
+        thread.start();
+    }
+
     public void run(){
-        while(isConnected()){
-            System.out.println("this socket is connected");
+        while(isConnected() || in.hasNext()){
+            System.out.println(in.next());
             thread.run();
         }
     }
