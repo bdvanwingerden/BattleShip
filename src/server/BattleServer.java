@@ -65,7 +65,23 @@ public class BattleServer implements MessageListener{
     }
 
     public void messageReceived(String message, MessageSource source){
-        System.out.println(source + message);
+        User currentUser = (User)source;
+
+        Scanner messageScanner = new Scanner(message);
+
+        switch (messageScanner.next()){
+            case "/join":
+                currentUser.setUsername(messageScanner.next());
+                break;
+            case "/play":
+                break;
+            case "/attack":
+                break;
+            case "/quit":
+                break;
+            case "/show":
+                break;
+        }
     }
 
     public void sourceClosed(MessageSource source){
