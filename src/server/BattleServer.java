@@ -21,6 +21,10 @@ public class BattleServer implements MessageListener{
     private int port;
     private ArrayList<ConnectionAgent> connectionAgents;
 
+    /**Command sent from the user*/
+    private String userCmd;
+
+
     public BattleServer(int port) {
         this.game = new Game();
         current = 0;
@@ -28,6 +32,7 @@ public class BattleServer implements MessageListener{
         connectionAgents = new ArrayList<>();
         serverSocket = null;
         clientSocket =  null;
+        userCmd = "";
     }
 
     public void listen() throws IOException{
@@ -70,4 +75,25 @@ public class BattleServer implements MessageListener{
     public void sourceClosed(MessageSource source){
 
     }
+
+    /**
+     * Interprets the command sent from the users
+     */
+    public void gameCommand(String userCmd){
+        this.userCmd = userCmd;
+
+        if(userCmd.equals("/join")){
+
+        }else if(userCmd.equals("/play")){
+
+        }else if(userCmd.equals("/attack")){
+
+        }else if(userCmd.equals("/quit")){
+
+        }else if(userCmd.equals("/show")){
+
+        }
+
+    }//end gameCommand
+
 }
