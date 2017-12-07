@@ -47,13 +47,9 @@ public class BattleServer implements MessageListener{
         while (!serverDone) {
             clientSocket = serverSocket.accept();
 
-            ConnectionAgent newConnection = new ConnectionAgent(clientSocket,
-                    inFromClient, outToClient);
+            connectionAgents.add(new ConnectionAgent(clientSocket,
+                            inFromClient, outToClient, new Thread()));
 
-            newConnection.setThread(new Thread(newConnection));
-            connectionAgents.add(newConnection);
-
-            newConnection.go();
         }
 
         serverSocket.close();
