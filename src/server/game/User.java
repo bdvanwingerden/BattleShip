@@ -1,16 +1,13 @@
 package server.game;
 
-public class User {
+
+public class User{
     Grid grid;
     String username;
-    int numHits;
 
     public User(String username) {
         this.username = username;
-    }
-
-    public void setGrid(Grid grid) {
-        this.grid = grid;
+        grid = new Grid();
     }
 
     public Grid getGrid() {
