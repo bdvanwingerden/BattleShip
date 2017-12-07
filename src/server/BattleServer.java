@@ -33,19 +33,19 @@ public class BattleServer implements MessageListener{
     public void listen() throws IOException{
         serverSocket = new ServerSocket(port);
 
+        Socket connectionSocket = serverSocket.accept();
+
+        Scanner inFromClient =
+                new Scanner(new InputStreamReader(connectionSocket
+                        .getInputStream()));
+
+        PrintStream outToClient =
+                new PrintStream(connectionSocket.getOutputStream());
+
         boolean serverDone = false;
         //TODO make this not a forever loop
         while (!serverDone) {
-            System.out.println("connected1");
             clientSocket = serverSocket.accept();
-            System.out.println("connected2");
-
-            Scanner inFromClient =
-                    new Scanner(new InputStreamReader(clientSocket
-                            .getInputStream()));
-
-            PrintStream outToClient =
-                    new PrintStream(clientSocket.getOutputStream());
 
             ConnectionAgent newConnection = new ConnectionAgent(clientSocket,
                     inFromClient, outToClient);
@@ -53,13 +53,9 @@ public class BattleServer implements MessageListener{
             newConnection.setThread(new Thread(newConnection));
             connectionAgents.add(newConnection);
 
-            System.out.println("connected3");
-
             newConnection.go();
-            System.out.println("connected4");
         }
 
-        System.out.println("out of loop");
         serverSocket.close();
     }
 

@@ -9,9 +9,7 @@ public class BattleShipDriver {
         BattleServer bs = new BattleServer(PORT);
 
         try {
-            System.out.println("afd");
             bs.listen();
-            System.out.println("hello");
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
