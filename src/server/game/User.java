@@ -22,6 +22,7 @@ public class User extends ConnectionAgent{
 
     public void setUsername(String username){
         this.username = username;
+        System.out.println("username " +  username);
     }
 
     public Grid getGrid() {

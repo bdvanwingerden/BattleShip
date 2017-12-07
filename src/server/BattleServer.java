@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BattleServer implements MessageListener{
@@ -20,20 +19,13 @@ public class BattleServer implements MessageListener{
     private int current;
     private Game game;
     private int port;
-    private ArrayList<ConnectionAgent> connectionAgents;
-
-    /**Command sent from the user*/
-    private String userCmd;
-
 
     public BattleServer(int port) {
         this.game = new Game();
         current = 0;
         this.port = port;
-        connectionAgents = new ArrayList<>();
         serverSocket = null;
         clientSocket =  null;
-        userCmd = "";
     }
 
     public void listen() throws IOException{
@@ -51,12 +43,12 @@ public class BattleServer implements MessageListener{
             PrintStream outToClient =
                     new PrintStream(clientSocket.getOutputStream());
 
-            ConnectionAgent currentAgent = new User(clientSocket,
+            User currentAgent = new User(clientSocket,
                     inFromClient, outToClient, this);
 
             currentAgent.setThread(new Thread(currentAgent));
 
-            connectionAgents.add(currentAgent);
+            game.addUser(currentAgent);
             currentAgent.go();
         }
 
@@ -64,13 +56,31 @@ public class BattleServer implements MessageListener{
     }
 
     public void broadcast(String message){
-        for(ConnectionAgent c : connectionAgents){
+        for(User c : game.getCurrentPlayers()){
             c.sendMessage(message);
         }
     }
 
     public void messageReceived(String message, MessageSource source){
-        System.out.println(source + message);
+        User currentUser = (User)source;
+
+        System.out.println(message);
+
+        Scanner messageScanner = new Scanner(message);
+
+        switch (messageScanner.next()){
+            case "/join":
+                currentUser.setUsername(messageScanner.next());
+                break;
+            case "/play":
+                break;
+            case "/attack":
+                break;
+            case "/quit":
+                break;
+            case "/show":
+                break;
+        }
     }
 
     public void sourceClosed(MessageSource source){
@@ -81,7 +91,7 @@ public class BattleServer implements MessageListener{
      * Interprets the command sent from the users
      */
     public void gameCommand(String userCmd){
-        this.userCmd = userCmd;
+
 
         if(userCmd.equals("/join")){
             //user joins server
@@ -96,5 +106,6 @@ public class BattleServer implements MessageListener{
         }
 
     }//end gameCommand
+
 
 }

@@ -40,8 +40,6 @@ public class Grid {
      */
     public void addShip(String symbol, int length){
 
-        System.out.println("Attempting to add " + symbol);
-
         int x = random.nextInt(DIMENSIONS);
         int y = random.nextInt(DIMENSIONS);
         int direction = random.nextInt(2);
@@ -136,7 +134,7 @@ public class Grid {
         }
 
         if(noShips){
-            System.out.println(symbol + " added");
+
             for(int i = y; i < y+length; i++){
                 if(orientation == 1){
                     grid[x][i] = symbol;

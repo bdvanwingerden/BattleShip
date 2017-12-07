@@ -10,14 +10,16 @@ public class Game {
         currentPlayers = new LinkedList<>();
     }
 
-    public void addUser(String username){
-        if(!containsName(username)){
-            currentPlayers.push(new User(username));
-        }
+    public void addUser(User user){
+        currentPlayers.push(user);
     }
 
     public void removeUser(User user){
         currentPlayers.remove(user);
+    }
+
+    public LinkedList<User> getCurrentPlayers() {
+        return currentPlayers;
     }
 
     public boolean containsName(String username){
