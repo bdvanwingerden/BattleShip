@@ -21,7 +21,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     }
 
     public void sendMessage(String message){
-        notifyReceipt(message);
+        out.println(message);
     }
 
     public boolean isConnected(){
@@ -49,8 +49,8 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     public void run(){
         System.out.println("socket id " + thread.getId());
 
-        while(isConnected() && in.hasNext()){
-            sendMessage(in.next() + " " + in.next());
+        while(isConnected() && in.hasNextLine()){
+            notifyReceipt(in.nextLine());
         }
     }
 }

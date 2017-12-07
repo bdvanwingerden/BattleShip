@@ -42,6 +42,8 @@ public class BattleServer implements MessageListener{
             PrintStream outToClient =
                     new PrintStream(clientSocket.getOutputStream());
 
+            outToClient.print("Successfully connected to Battleship!");
+
             User currentAgent = new User(clientSocket,
                     inFromClient, outToClient, this);
 
@@ -72,12 +74,15 @@ public class BattleServer implements MessageListener{
                 currentUser.setUsername(messageScanner.next());
                 break;
             case "/play":
+                game = new Game();
+                broadcast("GAME STARTING!");
                 break;
             case "/attack":
                 break;
             case "/quit":
                 break;
             case "/show":
+                currentUser.sendMessage(currentUser.getGrid().getGrid());
                 break;
         }
     }
