@@ -84,15 +84,15 @@ public class BattleServer implements MessageListener{
         this.userCmd = userCmd;
 
         if(userCmd.equals("/join")){
-
+            //user joins server
         }else if(userCmd.equals("/play")){
-
+            //user attempts to enter game
         }else if(userCmd.equals("/attack")){
-
+            //User attempts to attack another player
         }else if(userCmd.equals("/quit")){
-
+            //User wants to quit
         }else if(userCmd.equals("/show")){
-
+            //User wants to see an opponents board
         }
 
     }//end gameCommand
