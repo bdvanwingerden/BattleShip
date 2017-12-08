@@ -91,33 +91,46 @@ public class BattleServer implements MessageListener{
                 break;
             case "/quit":
                 game.getCurrentPlayers().remove(currentUser);
+                if(game.getCurrentPlayers().size() < 2){
+                    current = -1;
+                    broadcast("There are not enough players to continue " +
+                            "please wait for more to join");
+                }
                 break;
             case "/show":
+                if(current > -1 && game.getCurrentPlayers().size() > 2)
                 currentUser.sendMessage(currentUser.getGrid().getGrid());
+                currentUser.sendMessage("The game is not started yet");
                 break;
         }
     }
 
     public void play(User currentUser){
-        if(current == -1) {
+        if(userQueue.size() > 1 && current == -1) {
             game = new Game();
             game.addUsers(userQueue);
             broadcast("GAME STARTING!");
             incrementTurn();
         }else{
-            currentUser.sendMessage("Please wait a game is already " +
-                    "started");
+            if(current != -1) {
+                currentUser.sendMessage("Please wait a game is already " +
+                        "started");
+            }else if(userQueue.size()  < 2){
+                currentUser.sendMessage("Please wait there are not enough " +
+                        "players in the server");
+            }
         }
     }
 
     public void incrementTurn(){
-        if(current < game.getCurrentPlayers().size()){
+        if(current < game.getCurrentPlayers().size() - 1){
             current ++;
         }else{
             current = 0;
         }
 
-        broadcast("it is " + game.getCurrentPlayers().get(current) + "'s turn");
+        broadcast("it is " + game.getCurrentPlayers().get(current).getUsername()
+                + "'s " + "turn");
     }
 
     public boolean isUsersTurn(User currentUser){
