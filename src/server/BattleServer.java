@@ -1,6 +1,5 @@
 package server;
 
-import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 import server.game.Game;
@@ -83,7 +82,12 @@ public class BattleServer implements MessageListener{
                 play(currentUser);
                 break;
             case "/attack":
-                attack(currentUser, messageScanner);
+                if(isUsersTurn(currentUser)) {
+                    attack(currentUser, messageScanner);
+                }else{
+                    currentUser.sendMessage("It's Not currently your turn " +
+                            "please wait!");
+                }
                 break;
             case "/quit":
                 game.getCurrentPlayers().remove(currentUser);
@@ -99,15 +103,34 @@ public class BattleServer implements MessageListener{
             game = new Game();
             game.addUsers(userQueue);
             broadcast("GAME STARTING!");
+            incrementTurn();
         }else{
             currentUser.sendMessage("Please wait a game is already " +
                     "started");
         }
     }
 
+    public void incrementTurn(){
+        if(current < game.getCurrentPlayers().size()){
+            current ++;
+        }else{
+            current = 0;
+        }
+
+        broadcast("it is " + game.getCurrentPlayers().get(current) + "'s turn");
+    }
+
+    public boolean isUsersTurn(User currentUser){
+       boolean isTurn = false;
+       if(game.getCurrentPlayers().get(current) == currentUser){
+           isTurn = true;
+       }
+       return  isTurn;
+    }
+
     public void attack(User currentUser, Scanner messageScanner){
         String nameToAttack = null;
-        User userToAttck = null;
+        User userToAttack = null;
         int  x = -1;
         int  y = -1;
 
@@ -115,7 +138,7 @@ public class BattleServer implements MessageListener{
             nameToAttack = messageScanner.next();
             for(User u : game.getCurrentPlayers()){
                 if(u.getUsername().equals(nameToAttack)){
-                    userToAttck = u;
+                    userToAttack = u;
                 }
             }
         }
@@ -127,21 +150,22 @@ public class BattleServer implements MessageListener{
             }
         }
 
-        if(nameToAttack != null && userToAttck != null && x != -1 && y != -1){
+        if(nameToAttack != null && userToAttack != null && x != -1 && y != -1){
             broadcast(currentUser.getUsername() + " is attacking " +
                     nameToAttack + " at " + x + " " + y);
-            String result = userToAttck.getGrid().takeShot(x,y);
+            String result = userToAttack.getGrid().takeShot(x,y);
             broadcast(currentUser.getUsername() + " " + result);
         }else{
             if(nameToAttack == null){
                 currentUser.sendMessage("No parameters were given");
-            }else if(userToAttck == null){
+            }else if(userToAttack == null){
                 currentUser.sendMessage("that user is not in the current game" +
                         " or does not exist");
             }else if(x == -1 || y == -1){
                 currentUser.sendMessage("The coordinates were incorrect");
             }
         }
+        incrementTurn();
     }
 
     public void sourceClosed(MessageSource source){
