@@ -87,24 +87,28 @@ public class Grid {
      * @param x the x coordinate to aim for
      * @param y the y coordinate to aim for
      */
-    public void takeShot(int x,int y){
+    public String takeShot(int x,int y){
+
+        String result;
 
         if(x >= DIMENSIONS || y >= DIMENSIONS){
-            System.out.println("Given coordinates are out of bounds!");
+            result = "has Given coordinates that are out of bounds!";
         }
         else{
 
             if(grid[x][y].equals(" ") || grid[x][y].equals("X")){
-                System.out.println("That's a miss!");
+                result = "missed!";
                 grid[x][y] = "X";
             }
             else if(grid[x][y].equals("@"))
-                System.out.println("You already hit this spot!");
+                result = "already hit this spot!";
             else{
                 grid[x][y] = "@";
-                System.out.println("That's a hit!");
+                result = "hit!";
             }
         }
+
+        return result;
     }
 
 

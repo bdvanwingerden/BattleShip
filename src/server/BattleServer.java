@@ -24,7 +24,7 @@ public class BattleServer implements MessageListener{
 
     public BattleServer(int port) {
         this.game = new Game();
-        current = 0;
+        current = -1;
         this.port = port;
         serverSocket = null;
         clientSocket =  null;
@@ -80,13 +80,13 @@ public class BattleServer implements MessageListener{
                 currentUser.setUsername(messageScanner.next());
                 break;
             case "/play":
-                game = new Game();
-                game.addUsers(userQueue);
-                broadcast("GAME STARTING!");
+                play(currentUser);
                 break;
             case "/attack":
+                attack(currentUser, messageScanner);
                 break;
             case "/quit":
+                game.getCurrentPlayers().remove(currentUser);
                 break;
             case "/show":
                 currentUser.sendMessage(currentUser.getGrid().getGrid());
@@ -94,8 +94,58 @@ public class BattleServer implements MessageListener{
         }
     }
 
+    public void play(User currentUser){
+        if(current == -1) {
+            game = new Game();
+            game.addUsers(userQueue);
+            broadcast("GAME STARTING!");
+        }else{
+            currentUser.sendMessage("Please wait a game is already " +
+                    "started");
+        }
+    }
+
+    public void attack(User currentUser, Scanner messageScanner){
+        String nameToAttack = null;
+        User userToAttck = null;
+        int  x = -1;
+        int  y = -1;
+
+        if(messageScanner.hasNext()){
+            nameToAttack = messageScanner.next();
+            for(User u : game.getCurrentPlayers()){
+                if(u.getUsername().equals(nameToAttack)){
+                    userToAttck = u;
+                }
+            }
+        }
+
+        if(messageScanner.hasNextInt()) {
+            x = messageScanner.nextInt();
+            if(messageScanner.hasNextInt()){
+                y = messageScanner.nextInt();
+            }
+        }
+
+        if(nameToAttack != null && userToAttck != null && x != -1 && y != -1){
+            broadcast(currentUser.getUsername() + " is attacking " +
+                    nameToAttack + " at " + x + " " + y);
+            String result = userToAttck.getGrid().takeShot(x,y);
+            broadcast(currentUser.getUsername() + " " + result);
+        }else{
+            if(nameToAttack == null){
+                currentUser.sendMessage("No parameters were given");
+            }else if(userToAttck == null){
+                currentUser.sendMessage("that user is not in the current game" +
+                        " or does not exist");
+            }else if(x == -1 || y == -1){
+                currentUser.sendMessage("The coordinates were incorrect");
+            }
+        }
+    }
+
     public void sourceClosed(MessageSource source){
 
     }
-    
+
 }

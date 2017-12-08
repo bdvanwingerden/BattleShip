@@ -1,7 +1,7 @@
 package server.game;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+
 
 public class Game {
 
@@ -11,8 +11,11 @@ public class Game {
         currentPlayers = new ArrayList<>();
     }
 
-    public void addUsers(ArrayList newPlayers){
+    public void addUsers(ArrayList<User> newPlayers){
         currentPlayers = newPlayers;
+        for(User u : currentPlayers){
+            u.grid = new Grid();
+        }
     }
 
     public void removeUser(User user){
