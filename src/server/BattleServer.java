@@ -4,7 +4,6 @@ import common.MessageListener;
 import common.MessageSource;
 import server.game.Game;
 import server.game.User;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -14,14 +13,38 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+/**
+ * Creates games and allows multiple clients to join our battleship game
+ *
+ * @author Bronson VanWingerden , Dorian Barrier
+ */
 public class BattleServer implements MessageListener{
+
+    /**the socket to listen on*/
     private ServerSocket serverSocket;
+
+    /**the temporary clientSocket used when a client initializes a connection*/
     private Socket clientSocket;
+
+    /**the current turn*/
     private int current;
+
+    /**the current game*/
     private Game game;
+
+    /**the current port*/
     private int port;
+
+    /**the current userQueue*/
     private ArrayList<User> userQueue;
 
+    /**false while the server is still running*/
+    boolean serverDone;
+
+    /**
+     * public constructor that creates a battle server given a port
+     * @param port the port to listen on
+     */
     public BattleServer(int port) {
         this.game = new Game();
         current = -1;
@@ -31,10 +54,15 @@ public class BattleServer implements MessageListener{
         userQueue = new ArrayList<>();
     }
 
+    /**
+     * listens for clients to connect while the server is not done
+     *
+     * @throws IOException client socket cannot connect
+     */
     public void listen() throws IOException{
         serverSocket = new ServerSocket(port);
 
-        boolean serverDone = false;
+        serverDone = false;
         //TODO make this not a forever loop
         while (!serverDone) {
             clientSocket = serverSocket.accept();
@@ -61,12 +89,23 @@ public class BattleServer implements MessageListener{
         serverSocket.close();
     }
 
+    /**
+     * broadcasts to all current users in the current game
+     *
+     * @param message the message to send
+     */
     public void broadcast(String message){
         for(User c : game.getCurrentPlayers()){
             c.sendMessage(message);
         }
     }
 
+    /**
+     * handles any messages the user sends
+     *
+     * @param message The message received by the subject
+     * @param source The source from which this message originated (if needed).
+     */
     public void messageReceived(String message, MessageSource source) {
         User currentUser = (User)source;
 
@@ -96,6 +135,11 @@ public class BattleServer implements MessageListener{
                     current = -1;
                     broadcast("There are not enough players to continue " +
                             "please wait for more to join");
+
+                    if(game.getCurrentPlayers().size() < 1 && userQueue.size
+                            () < 1){
+                        serverDone = true;
+                    }
                 }
                 break;
             case "/show":
@@ -108,6 +152,12 @@ public class BattleServer implements MessageListener{
         }
     }
 
+    /**
+     * allows a user to join the game once they have joined the server
+     *
+     * @param currentUser the user trying to join
+     * @param messageScanner the scanner to read in the user name from
+     */
     public void join(User currentUser, Scanner messageScanner) {
         String nameToSet = messageScanner.next();
 
@@ -123,6 +173,11 @@ public class BattleServer implements MessageListener{
         }
     }
 
+    /**
+     * starts the game if enough players are joined otherwise sends an error
+     * to the user that tried to start the game
+     * @param currentUser the user that tried to start play
+     */
     public void play(User currentUser){
         if(userQueue.size() > 1 && current == -1) {
             game = new Game();
@@ -140,6 +195,9 @@ public class BattleServer implements MessageListener{
         }
     }
 
+    /**
+     * increments the current turn
+     */
     public void incrementTurn(){
         if(current < game.getCurrentPlayers().size() - 1){
             current ++;
@@ -151,6 +209,11 @@ public class BattleServer implements MessageListener{
                 + "'s " + "turn");
     }
 
+    /**
+     * returns true if it is the the given users current turn
+     * @param currentUser the current user to check if it is their turn
+     * @return returns true if it is the users turn
+     */
     public boolean isUsersTurn(User currentUser){
        boolean isTurn = false;
        if(game.getCurrentPlayers().get(current) == currentUser){
@@ -159,6 +222,13 @@ public class BattleServer implements MessageListener{
        return  isTurn;
     }
 
+    /**
+     * allows a user to attempt an attack on another user if the user doesn't
+     * exist or the attack is out of bounds the turn is incremented and the
+     * player looses their current turn
+     * @param currentUser the user attempting to attack
+     * @param messageScanner the scanner to read the attack input in from
+     */
     public void attack(User currentUser, Scanner messageScanner) {
         String nameToAttack = null;
         User userToAttack = null;
@@ -199,6 +269,10 @@ public class BattleServer implements MessageListener{
         incrementTurn();
     }
 
+    /**
+     * removes a user from the listeners list
+     * @param source The <code>MessageSource</code> that does not expect more messages.
+     */
     public void sourceClosed(MessageSource source){
         User exited = (User) source;
         game.getCurrentPlayers().remove(exited);

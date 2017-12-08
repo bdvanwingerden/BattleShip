@@ -2,6 +2,11 @@ package server.game;
 
 import java.util.Random;
 
+/**
+ * Creates a holds a grid with the battleships drawn on it
+ *
+ * @author Bronson VanWingerden , Dorian Barrier
+ */
 public class Grid {
     /**sets the x & y dimensions of the board to create */
     static final int DIMENSIONS = 10;
@@ -113,45 +118,52 @@ public class Grid {
 
 
     /**
+     * attempts to draw a battle ship at the given coordinates. if the length
+     * exceeds the dimensions of the board the ship will not be drawn
      *
-     * @param x
-     * @param y
-     * @param symbol
-     * @param length
+     * @param x the x coordinate to attempt to draw at
+     * @param y the y coordinate to attempt to draw at
+     * @param symbol the symbol that represents the current ship
+     * @param length the length of the ship to draw
      * @param orientation 0 if horizontal and 1 if vertical
      */
     public void attemptToDrawShip( int x, int y, String symbol,
                                           int length, int orientation){
         boolean noShips = true;
 
-        for(int i = y; i < y+length; i++){
+        if(length <= DIMENSIONS) {
+            for (int i = y; i < y + length; i++) {
 
-            if(i >= DIMENSIONS) {
-                addShip(symbol, length);
-                return;
-            }else if(!grid[x][i].equals(" ") && orientation == 1 || !grid[i][y]
-                    .equals(" ")
-                    &&
-                    orientation == 0){
-                noShips = false;
-            }
-        }
-
-        if(noShips){
-
-            for(int i = y; i < y+length; i++){
-                if(orientation == 1){
-                    grid[x][i] = symbol;
-                }else if(orientation == 0){
-                    grid[i][y] = symbol;
+                if (i >= DIMENSIONS) {
+                    addShip(symbol, length);
+                    return;
+                } else if (!grid[x][i].equals(" ") && orientation == 1 || !grid[i][y]
+                        .equals(" ")
+                        &&
+                        orientation == 0) {
+                    noShips = false;
                 }
-
             }
-        }else{
-            addShip(symbol,length);
+
+            if (noShips) {
+
+                for (int i = y; i < y + length; i++) {
+                    if (orientation == 1) {
+                        grid[x][i] = symbol;
+                    } else if (orientation == 0) {
+                        grid[i][y] = symbol;
+                    }
+
+                }
+            } else {
+                addShip(symbol, length);
+            }
         }
     }
 
+    /**
+     * Hard coded ships to add
+     */
     public void addShips(){
         addShip("A", 5);
         addShip("B", 4);

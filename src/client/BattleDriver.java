@@ -23,7 +23,7 @@ public class BattleDriver {
 
         //command line args are Hostname, Port, and username
         if(args.length != 3){
-            System.out.println("Usage: <protocol> [<host name>] [<port>] [<username>]");
+            System.out.println("Usage: [<host name>] [<port>] [<username>]");
             System.exit(1); //1 -> Wrong number of arguments
         }
         else{
