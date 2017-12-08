@@ -91,6 +91,7 @@ public class BattleServer implements MessageListener{
                 break;
             case "/quit":
                 game.getCurrentPlayers().remove(currentUser);
+                currentUser.close();
                 if(game.getCurrentPlayers().size() < 2){
                     current = -1;
                     broadcast("There are not enough players to continue " +
@@ -200,7 +201,6 @@ public class BattleServer implements MessageListener{
 
     public void sourceClosed(MessageSource source){
         User exited = (User) source;
-        exited.close();
         game.getCurrentPlayers().remove(exited);
     }
 
