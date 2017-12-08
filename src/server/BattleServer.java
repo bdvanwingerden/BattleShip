@@ -74,8 +74,6 @@ public class BattleServer implements MessageListener{
             PrintStream outToClient =
                     new PrintStream(clientSocket.getOutputStream());
 
-            outToClient.print("Successfully connected to Battleship!");
-
             User currentAgent = new User(clientSocket,
                     inFromClient, outToClient, this);
 
@@ -116,6 +114,8 @@ public class BattleServer implements MessageListener{
         switch (messageScanner.next()){
             case "/join":
                 join(currentUser, messageScanner);
+                currentUser.sendMessage("Successfully connected to " +
+                        "Battleship!");
                 break;
             case "/play":
                 play(currentUser);
@@ -162,11 +162,7 @@ public class BattleServer implements MessageListener{
         String nameToSet = messageScanner.next();
 
         if(!game.containsName(nameToSet)){
-            try {
-                currentUser.setUsername(messageScanner.next());
-            }catch (NoSuchElementException e){
-
-            }
+            currentUser.setUsername(nameToSet);
         }else{
             currentUser.sendMessage(nameToSet + " is already in use please " +
                     "try again");

@@ -80,24 +80,27 @@ public class BattleClient extends MessageSource implements MessageListener {
             currentAgent.setThread(new Thread(currentAgent));
 
             currentAgent.go();
+
+            send("/join " + userName);
             
-            while((battleCommand = userInput.nextLine()) != null){
+            while(userInput.hasNextLine()){
+                battleCommand = userInput.nextLine();
                 send(battleCommand);
             }
 
     }//end connect()
 
-    @Override
+
     public void messageReceived(String message, MessageSource source){
         System.out.println(message);
     }
 
-    @Override
+
     public void sourceClosed(MessageSource source){
 
     }
 
     public void send(String message){
-        currentAgent.sendMessage(message.trim());
+        currentAgent.sendMessage(message);
     }
 }

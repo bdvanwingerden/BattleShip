@@ -47,8 +47,6 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     }
 
     public void run(){
-        System.out.println("socket id " + thread.getId());
-
         while(isConnected() && in.hasNextLine()){
             notifyReceipt(in.nextLine());
         }
