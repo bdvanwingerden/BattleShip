@@ -62,6 +62,7 @@ public class BattleClient extends MessageSource implements MessageListener {
      */
     public void connect() throws IOException{
 
+
         isConnected = true;
 
         clientSocket = new Socket(host, port);
@@ -86,8 +87,8 @@ public class BattleClient extends MessageSource implements MessageListener {
 
             currentAgent.go();
 
-            while((battleCommand = userInput.nextLine()) != null){
-                out.write(battleCommand);
+            while((battleCommand = userInput.nextLine()) !=  null){
+                currentAgent.sendMessage(battleCommand);
             }
 
         }//end while

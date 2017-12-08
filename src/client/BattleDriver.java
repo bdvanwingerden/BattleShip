@@ -27,9 +27,10 @@ public class BattleDriver {
         }
         else{
             try {
-                port = Integer.parseInt(args[2]);
+                port = Integer.parseInt(args[1]);
                 host = InetAddress.getByName(args[0]);
-                //####Create new Client here!!!####
+                username = args[2];
+                
             }catch(UnknownHostException e){
                 System.out.println("UnknownHostException: " + e.getMessage());
             }
