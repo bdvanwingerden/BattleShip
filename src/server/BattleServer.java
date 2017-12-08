@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class BattleServer implements MessageListener{
@@ -62,12 +63,11 @@ public class BattleServer implements MessageListener{
 
     public void broadcast(String message){
         for(User c : game.getCurrentPlayers()){
-            System.out.println("sending to all user");
             c.sendMessage(message);
         }
     }
 
-    public void messageReceived(String message, MessageSource source){
+    public void messageReceived(String message, MessageSource source) {
         User currentUser = (User)source;
 
         System.out.println(message);
@@ -76,7 +76,7 @@ public class BattleServer implements MessageListener{
 
         switch (messageScanner.next()){
             case "/join":
-                currentUser.setUsername(messageScanner.next());
+                join(currentUser, messageScanner);
                 break;
             case "/play":
                 play(currentUser);
@@ -98,10 +98,27 @@ public class BattleServer implements MessageListener{
                 }
                 break;
             case "/show":
-                if(current > -1 && game.getCurrentPlayers().size() > 2)
-                currentUser.sendMessage(currentUser.getGrid().getGrid());
-                currentUser.sendMessage("The game is not started yet");
+                if(current != -1) {
+                    currentUser.sendMessage(currentUser.getGrid().getGrid());
+                }else {
+                    currentUser.sendMessage("The game is not started yet");
+                }
                 break;
+        }
+    }
+
+    public void join(User currentUser, Scanner messageScanner) {
+        String nameToSet = messageScanner.next();
+
+        if(!game.containsName(nameToSet)){
+            try {
+                currentUser.setUsername(messageScanner.next());
+            }catch (NoSuchElementException e){
+
+            }
+        }else{
+            currentUser.sendMessage(nameToSet + " is already in use please " +
+                    "try again");
         }
     }
 
@@ -141,7 +158,7 @@ public class BattleServer implements MessageListener{
        return  isTurn;
     }
 
-    public void attack(User currentUser, Scanner messageScanner){
+    public void attack(User currentUser, Scanner messageScanner) {
         String nameToAttack = null;
         User userToAttack = null;
         int  x = -1;
@@ -182,7 +199,9 @@ public class BattleServer implements MessageListener{
     }
 
     public void sourceClosed(MessageSource source){
-
+        User exited = (User) source;
+        exited.close();
+        game.getCurrentPlayers().remove(exited);
     }
 
 }

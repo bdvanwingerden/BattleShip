@@ -18,10 +18,6 @@ public class Game {
         }
     }
 
-    public void removeUser(User user){
-        currentPlayers.remove(user);
-    }
-
     public ArrayList<User> getCurrentPlayers() {
         return currentPlayers;
     }
