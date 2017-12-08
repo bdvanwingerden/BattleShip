@@ -1,5 +1,6 @@
 package client;
 
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -30,10 +31,13 @@ public class BattleDriver {
                 port = Integer.parseInt(args[1]);
                 host = InetAddress.getByName(args[0]);
                 username = args[2];
-                
+                BattleClient client = new BattleClient(host,port,username);
+                client.connect();
             }catch(UnknownHostException e){
                 System.out.println("UnknownHostException: " + e.getMessage());
-            }
+            }catch(IOException ioe){
+                ///yeahhhh
+                }
         }
 
 

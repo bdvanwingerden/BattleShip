@@ -62,17 +62,11 @@ public class BattleClient extends MessageSource implements MessageListener {
      */
     public void connect() throws IOException{
 
-
         isConnected = true;
 
         clientSocket = new Socket(host, port);
 
         userInput = new Scanner(System.in);
-
-        while(isConnected){
-
-            BufferedWriter out =
-                    new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
             Scanner inFromServer =
                     new Scanner(new InputStreamReader(clientSocket.getInputStream()));
@@ -86,18 +80,16 @@ public class BattleClient extends MessageSource implements MessageListener {
             currentAgent.setThread(new Thread(currentAgent));
 
             currentAgent.go();
-
-            while((battleCommand = userInput.nextLine()) !=  null){
-                currentAgent.sendMessage(battleCommand);
+            
+            while((battleCommand = userInput.nextLine()) != null){
+                send(battleCommand);
             }
-
-        }//end while
 
     }//end connect()
 
     @Override
     public void messageReceived(String message, MessageSource source){
-        System.out.println("message recieved");
+        System.out.println(message);
     }
 
     @Override
@@ -106,6 +98,6 @@ public class BattleClient extends MessageSource implements MessageListener {
     }
 
     public void send(String message){
-
+        currentAgent.sendMessage(message.trim());
     }
 }
