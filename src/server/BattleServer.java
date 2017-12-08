@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BattleServer implements MessageListener{
@@ -19,6 +20,7 @@ public class BattleServer implements MessageListener{
     private int current;
     private Game game;
     private int port;
+    private ArrayList<User> userQueue;
 
     public BattleServer(int port) {
         this.game = new Game();
@@ -26,6 +28,7 @@ public class BattleServer implements MessageListener{
         this.port = port;
         serverSocket = null;
         clientSocket =  null;
+        userQueue = new ArrayList<>();
     }
 
     public void listen() throws IOException{
@@ -50,7 +53,8 @@ public class BattleServer implements MessageListener{
 
             currentAgent.setThread(new Thread(currentAgent));
 
-            game.addUser(currentAgent);
+            userQueue.add(currentAgent);
+
             currentAgent.go();
         }
 
@@ -59,6 +63,7 @@ public class BattleServer implements MessageListener{
 
     public void broadcast(String message){
         for(User c : game.getCurrentPlayers()){
+            System.out.println("sending to all user");
             c.sendMessage(message);
         }
     }
@@ -76,6 +81,7 @@ public class BattleServer implements MessageListener{
                 break;
             case "/play":
                 game = new Game();
+                game.addUsers(userQueue);
                 broadcast("GAME STARTING!");
                 break;
             case "/attack":
@@ -91,26 +97,5 @@ public class BattleServer implements MessageListener{
     public void sourceClosed(MessageSource source){
 
     }
-
-    /**
-     * Interprets the command sent from the users
-     */
-    public void gameCommand(String userCmd){
-
-
-        if(userCmd.equals("/join")){
-            //user joins server
-        }else if(userCmd.equals("/play")){
-            //user attempts to enter game
-        }else if(userCmd.equals("/attack")){
-            //User attempts to attack another player
-        }else if(userCmd.equals("/quit")){
-            //User wants to quit
-        }else if(userCmd.equals("/show")){
-            //User wants to see an opponents board
-        }
-
-    }//end gameCommand
-
-
+    
 }

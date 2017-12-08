@@ -1,24 +1,25 @@
 package server.game;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Game {
 
-    private LinkedList<User> currentPlayers;
+    private ArrayList<User> currentPlayers;
 
     public Game() {
-        currentPlayers = new LinkedList<>();
+        currentPlayers = new ArrayList<>();
     }
 
-    public void addUser(User user){
-        currentPlayers.push(user);
+    public void addUsers(ArrayList newPlayers){
+        currentPlayers = newPlayers;
     }
 
     public void removeUser(User user){
         currentPlayers.remove(user);
     }
 
-    public LinkedList<User> getCurrentPlayers() {
+    public ArrayList<User> getCurrentPlayers() {
         return currentPlayers;
     }
 
