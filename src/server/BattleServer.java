@@ -143,12 +143,45 @@ public class BattleServer implements MessageListener{
                 }
                 break;
             case "/show":
-                if(current != -1) {
-                    currentUser.sendMessage(currentUser.getGrid().getGrid());
-                }else {
-                    currentUser.sendMessage("The game is not started yet");
-                }
+                show(currentUser,messageScanner);
                 break;
+        }
+    }
+
+    /**
+     * shows private user if the current user requests their own board and
+     * shows any other users public board if requested
+     * @param currentUser the current user making the request
+     * @param messageScanner the current input scanner
+     */
+    public void show(User currentUser, Scanner messageScanner){
+        String nameToShow = null;
+        User userToShow = null;
+
+        if(current != -1) {
+            if(messageScanner.hasNext()){
+                nameToShow = messageScanner.next();
+                if(nameToShow.equals(currentUser.getUsername())){
+                    currentUser.sendMessage(currentUser.getGrid().getPrivateGrid());
+                }else{
+                    for(User u : game.getCurrentPlayers()){
+                        if(u.getUsername().equals(nameToShow)){
+                            userToShow = u;
+                        }
+                    }
+
+                    if(userToShow != null){
+                        currentUser.sendMessage(userToShow.getGrid().getPublicGrid());
+                    }else{
+                        currentUser.sendMessage("that user is not found");
+                    }
+                }
+
+            }else{
+                currentUser.sendMessage("No user grid to show was provided");
+            }
+        }else {
+            currentUser.sendMessage("The game is not started yet");
         }
     }
 

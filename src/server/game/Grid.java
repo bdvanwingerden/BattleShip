@@ -14,6 +14,8 @@ public class Grid {
     /** the 2d array to contain the ships hits & misses for each players board */
     String[][] grid;
 
+    String[][] publicGrid;
+
     /**random number generator to randomly generate the locations for a ship to be placed*/
     Random random;
 
@@ -23,11 +25,13 @@ public class Grid {
      */
     public Grid() {
         grid = new String[DIMENSIONS][DIMENSIONS];
+        publicGrid = new String[DIMENSIONS][DIMENSIONS];
         random = new Random();
 
         for(int y = 0; y < DIMENSIONS; y++){
             for(int x = 0; x < DIMENSIONS; x++){
                 grid[x][y] = " ";
+                publicGrid[x][y] = " ";
             }
         }
 
@@ -63,7 +67,7 @@ public class Grid {
      * Returns the contents of the grid correctly formatted as a battleship board
      * @return the String containing the formatted board
      */
-    public String getGrid(){
+    public String getGrid(String[][] gridToDraw){
 
         String drawnGrid = "  ";
         String gridLine  = "  +";
@@ -78,12 +82,28 @@ public class Grid {
         for(int y = 0; y < DIMENSIONS; y++){
             String nextRow = y + " |";
             for(int x = 0; x < DIMENSIONS; x++){
-                nextRow  += " " + grid[x][y] + " |";
+                nextRow  += " " + gridToDraw[x][y] + " |";
             }
             drawnGrid += "\n" + nextRow;
             drawnGrid += "\n" + gridLine;
         }
         return drawnGrid;
+    }
+
+    /**
+     * returns the private grid
+     * @return the users private grid
+     */
+    public String getPrivateGrid(){
+        return getGrid(grid);
+    }
+
+    /**
+     * returns the public grid
+     * @return the users public grid
+     */
+    public String getPublicGrid(){
+        return getGrid(publicGrid);
     }
 
     /**
@@ -104,11 +124,13 @@ public class Grid {
             if(grid[x][y].equals(" ") || grid[x][y].equals("X")){
                 result = "missed!";
                 grid[x][y] = "X";
+                publicGrid[x][y] = "X";
             }
             else if(grid[x][y].equals("@"))
                 result = "already hit this spot!";
             else{
                 grid[x][y] = "@";
+                publicGrid[x][y] = "@";
                 result = "hit!";
             }
         }
@@ -183,7 +205,6 @@ public class Grid {
         grid.takeShot(5,5);
         grid.takeShot(6,6);
 
-        System.out.println(grid.getGrid());
-
+        System.out.println(grid.getPrivateGrid());
     }
 }
