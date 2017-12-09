@@ -9,7 +9,7 @@ import java.util.Random;
  */
 public class Grid {
     /**sets the x & y dimensions of the board to create */
-    static final int DIMENSIONS = 10;
+    static final int DIMENSIONS = 4;
 
     /** the 2d array to contain the ships hits & misses for each players board */
     String[][] grid;
@@ -187,8 +187,8 @@ public class Grid {
      * Hard coded ships to add
      */
     public void addShips(){
-        addShip("A", 5);
-        addShip("B", 4);
+        //addShip("A", 5);
+        //addShip("B", 4);
         addShip("S", 3);
         addShip("D", 3);
         addShip("P", 2);
@@ -200,10 +200,6 @@ public class Grid {
      */
     public static void main(String args[]){
         Grid grid = new Grid();
-
-        grid.takeShot(4,4);
-        grid.takeShot(5,5);
-        grid.takeShot(6,6);
 
         System.out.println(grid.getPrivateGrid());
     }
